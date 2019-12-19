@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--开启注解扫描-->
+    <context:component-scan base-package="cn.peter.web"></context:component-scan>
+
+    <!--开启mvc的注解驱动-->
+    <mvc:annotation-driven conversion-service="conversionService"></mvc:annotation-driven>
+
+    <!--用来加载静态资源-->
+    <mvc:default-servlet-handler></mvc:default-servlet-handler>
+
+    <!--配置试图解析器-->
+   <!-- <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>-->
+
+    <!--我配置视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/"></property>
+        <property name="suffix" value=".html"></property>
+    </bean>
+
+
+    <!--配置类型转换器-->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="cn.peter.converter.DateConverter">
+                    <property name="pattern" value="yyyy-MM-dd"></property>
+                </bean>
+            </set>
+        </property>
+    </bean>
+
+    <!--配置文件上传-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+
+    <!-- html作为返回视图，同时在web.xml配置 -->   <!--这个没用-->
+   <!-- <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+        <property name="prefix" value="" />
+        <property name="suffix" value=".html" />
+    </bean>-->
+
+</beans>

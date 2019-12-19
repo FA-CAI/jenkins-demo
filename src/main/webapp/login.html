@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>锤子科技后台登录</title>
+        <style>
+            *{margin: 0;padding: 0;}
+            body{text-align: center;  vertical-align: middle;}      /*居中*/
+            .banxin{
+                width: 1000px;
+                margin:0 auto;           /*居中*/
+            }
+            .top{
+                height:123px;
+            }
+            .log-left{
+                float:left;
+            }
+            .log-right{
+                position:relative;
+                top:88px;
+                left:27%;
+            }
+            .log-right a{
+                font-family: 宋体;
+                font-size:12px;
+                text-decoration:none;
+                color:#888888;
+            }
+            .zhengce{
+                height:30px;
+                background-color:#EDEEF3;
+                width:100%;
+            }
+            .ziti{
+                color:#BF9E7F;
+                font-size:12px;
+                line-height: 30px;    /*居中*/
+            }
+            .center{
+                width:100%;
+                height:480px;
+                background-color: #043DBF;
+            }
+            .center-img{
+                background: url(img/bg.jpg)  no-repeat left top;
+                height:500px;
+                width: 1920px;
+               /* margin: 0 auto;*/
+            }
+            .login{
+                width:350px;
+                height:370px;
+                position:absolute;
+                top:220px;
+                left: 10%;  margin-left: 160px;
+                background-color: #FFFFFF;
+            }
+            .ziti a:hover{text-decoration:underline!important;}
+            .log-right a:hover{text-decoration:underline!important;color:#BF9E7F;}
+            .bottom{
+                background-image: url(img);
+                height:350px;
+                width: 1000px;
+                margin: 0 auto;
+            }
+
+            .login-1,.login-2{
+                width: 173px;
+                float: left;
+                margin-top: 15px
+            }
+            .login-2{
+                border-left: 1px solid #F4F4F4 ;
+                border-left-width: 1px;
+                margin-top: 15px
+            }
+            .login-1 a,.login-2 a{
+                font-size: 18px;
+                font-weight: 300;
+                text-decoration: none;
+            }
+            .login-1 a{color: #BF9E7F;}
+            .login-2 a{color: #5E5E5E;}
+            .erweima{
+                width:320px;
+                height:240px;
+                position: absolute;
+                top:80px;
+                left:15px;
+                overflow:hidden;
+            }
+            .erweima #ewm1:hover{
+                float:left;
+            }
+            .clearFloat{clear: both}
+            .clearFloat{
+                font-family: 宋体;
+                font-size:12px;
+                color:#888888;
+                line-height:18px;
+            }
+            .clearFloat a{
+                text-decoration: none;
+                color:#FF5757;
+            }
+            .clearFloat a:hover{
+                color:#C11700;
+                text-decoration:underline;
+            }
+            .login-bottom{
+                position:absolute;
+                bottom:0px;
+            }
+            #loginForm{
+                width:100%;height:285px;/*visibility: hidden;*/
+                position: absolute;
+                top:70px;
+                visibility: hidden;
+            }
+            #input_name,#input_pwd{
+                height: 42px;width: 290px;
+            }
+            #input_name{
+                position: relative;top: -5px;
+            }
+            #input_pwd{
+                position: relative;top:7px;
+            }
+            .login-ZD{
+                width:290px;
+                margin:0 auto;
+                font-family: 宋体;
+                font-size:12px;
+                margin-top: 15px;
+                color:#888888;
+            }
+            .login-ZD span{
+                float: left;
+            }
+            .login-ZD a{
+                float: right;
+                color:#888888;
+                text-decoration:none;
+            }
+            .login-ZD input{
+                position: relative;
+                top:3px;    /*文字调居中已不动、继承居中，所以换动input*/
+            }
+            .denglu{
+                width: 100%;
+                margin-top:40px;
+            }
+            .denglu input{
+                color: white;height: 42px;width: 290px;font-size: 18px;background-color: #BF9E7F;border:none;
+            }
+            .kuaisu-denglu{
+                position: absolute;
+                left:30px;
+                bottom:45px;
+                color:#2875CC;
+                font-family: 宋体;
+                font-size:12px;
+            }
+            #div_error{
+                width:290px ;background-color: #FFEEEE;margin:0 auto; /*大壳不给它高*/
+                position: relative;top:-10px;
+            }
+            #p_errorText{
+                font-family: 宋体;font-size: 12px;height: 20px;line-height: 20px;color:#BF9E7F;  /*弄个小壳高，宽度自适应（就像套套）。不给它字它就啥也没有，小壳没宽了啊。*/
+                position: relative;left:-45px;
+            }
+        </style>
+        <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+        <script>
+            $(document).ready(function () {
+                $(".login-2").click(function () {
+                    $(".login-2 a").css("color","#BF9E7F");
+                    $(".login-1 a").css("color","#5E5E5E");
+                    $(".erweima").css("visibility","hidden");
+                    $("#loginForm").css("visibility","visible");
+                });
+                $(".login-1").click(function () {
+                    $(".login-1 a").css("color","#BF9E7F");
+                    $(".login-2 a").css("color","#5E5E5E");
+                    $("#loginForm").css("visibility","hidden");
+                    $(".erweima").css("visibility","visible");
+                });
+
+                $("#input_name").blur(function () {
+                    var str = $(this).val();
+                    var ret = /\S/;
+                    if (!ret.exec(str)){
+                        $("#p_errorText").html("前端提示（用户名不能为空）");
+                    } else{
+                        $("#p_errorText").html("");
+                    }
+                });
+                $("#input_pwd").blur(function () {
+                    var str = $(this).val();
+                    var ret = /\S/;
+                    if (!ret.exec(str)) {
+                        $("#p_errorText").html("前端提示（密码不能为空）");
+                    }else{
+                        $("#p_errorText").html("");
+                    }
+                });
+            })
+        </script>
+        <title>用户登录-上元研发后台管理系统</title>
+    </head>
+    <body>
+        <div class="banxin top">
+            <div class="log-left"> <img src="img/log1.jpg"></div>
+            <div class="log-right ziti" style="font-size: 18px">
+                没有账号？<a href="regist.html">点击这里注册！</a>
+            </div>
+        </div>
+        <div class="zhengce">
+                <span class="ziti">元宵节又称上元节、小正月、元夕或灯节,是中国春节年俗中最后一个重要节令。Yesterday：二零一九年二月十九号
+                <a href="" style="color: #2875CC;text-decoration:none;">农历正月十五</a>
+                。</span>
+        </div>
+        <div class="center">
+            <div  class="center-img">
+                <div class="login">
+                    <div class="login-1" ><a href="#">邮箱登录</a></div>
+                    <div class="login-2" ><a href="#">账户登录</a></div>
+                    <hr style="width:100%;height:1px;border:none;border-top:1px solid #F4F4F4;position:absolute;top:55px;" />
+                    <div class="erweima">
+                       <!-- <img src="img/dx.PNG" id="ewm1">
+                        <div class="clearFloat">
+                            <br>
+                        </div>-->
+                        <form action="/userInf/emailLogin" onsubmit="" method="post">
+                            <div >
+                                <input id="email" placeholder="邮箱"
+                                       type="text" name="email"  style="width:250px;height:30px;"/>
+                            </div>
+                            <div style="height:20px"></div>
+                                  <input id="verificationCode" placeholder="邮箱验证码" type="text"  name="nz"  style="width:250px;height:30px;"/>
+                            <div >
+                                <div style="height:20px"></div>
+                                <div class="gaoma"> <!--这就必然需要异步啦-->
+                                    <button type="button" id="gaoma"  style="width:80px;height:40px;">搞&nbsp码</button>
+                                </div>
+                            </div>
+                            <div class="denglu">
+                                <input type="submit" id="emailLogin" value="登&nbsp录" style="width:80px;height:40px;border:1px solid red;">
+                            </div>
+                        </form>
+                    </div>
+                    <div id="loginForm">
+                        <form action="/userInf/login" onsubmit="" method="post"> <!-- 本质就是url上添成访问服务器的某个方法-->
+                            <!--错误信息框-->
+                            <div id="div_error" >
+                                <span id="p_errorText" ></span>
+                            </div>
+                            <div>
+                                <input id="input_name" placeholder="账号：宝藏男孩" onfocus="this.placeholder=''"
+                                       type="text" name="loginname" value="">
+                            </div>
+                            <div>
+                                <input id="input_pwd" placeholder="密码：123456" onfocus="this.placeholder=''"
+                                       type="password"  name="password" value="">
+                            </div>
+                            <div class="login-ZD">
+                            </div>
+                            <div class="denglu">
+                                <input type="submit" value="一键后台">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="login-bottom">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="banxin bottom">
+        </div>
+        <div id="lastOne" style="width:400px;height:20px; position:absolute;
+                bottom:150px;left: 50%;  margin-left: -180px;
+                 font-family: 仿宋;">Copyright © 2004-2019 宝藏男孩 </div>
+        <script>
+            $("#gaoma").click(function () {
+                $.ajax({
+                    type:"post",
+                    url:"/userInf/email",
+                    data:{"xx":$("#email").val()},
+                    dataType:"json",
+                    success:function (res) {
+                        console.log("进来");
+                        alert(res);
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

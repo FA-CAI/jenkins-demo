@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <script src="../../layui/layui.js"></script>
+    <script src="../../js/JQuery3.3.1.js"></script>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        h3 {
+            height: 35px;
+            line-height: 45px;
+            font-size: 16px;
+        }
+    </style>
+   <!-- <script>
+        $(function () {
+            $.ajax({
+                type:"post",
+                url:"/userInf/know",
+                dataType:"json",
+                contentType:"application/json",
+                success:function (u) {
+                    console.log("当前用户为-&#45;&#45;"+u.msg);
+                    if (u.msg=='admin') {    //如果写全，那这儿判断的应该是“角色”。
+                                              // 现在在投机  //太丑陋了，不想看第二遍   //但是ajax里不能套ajax，待解决！！！
+
+                      //  });
+                    } else {
+
+
+                    }
+                }
+            });
+        });
+    </script>-->
+</head>
+<body>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;用户管理<i class="layui-icon layui-icon-right"></i>查询用户</h3>
+<hr style="margin-bottom: 20px;">
+<!--查询表单-->
+<form id="userInfSelectForm" class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">登录账号</label>
+        <div class="layui-input-inline" style="width: 300px;">
+            <input id="loginname" type="text" name="loginname" lay-verify="loginname" placeholder="请输入登录账号" autocomplete="off"
+                   class="layui-input">
+        </div>
+        <label class="layui-form-label">昵称</label>
+        <div class="layui-input-inline" style="width: 300px;">
+            <input id="nick" type="text" name="nick" lay-verify="nick" placeholder="请输入昵称" autocomplete="off" class="layui-input">
+        </div>
+        <label class="layui-form-label"></label>
+        <div class="layui-input-inline" style="width: 300px;">
+            <button class="layui-btn" lay-submit lay-filter="formSubmit">　查询　</button>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">建档时间</label>
+        <div class="layui-input-inline" style="width: 300px;">
+            <input type="text" name="createdate" placeholder="点击选择日期" class="layui-input" id="createdate" style="cursor: pointer;">
+        </div>
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-inline" style="width: 300px;">
+            <select id="status" name="status">
+                <option value="">请选择</option>
+                <option value="0">禁用</option>
+                <option value="1">启用</option>
+            </select>
+        </div>
+        <label class="layui-form-label"></label>
+        <div class="layui-input-inline" style="width: 300px;">
+            <button type="reset" class="layui-btn">　重置　</button>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">创建人账号</label>
+        <div class="layui-input-inline" style="width: 300px;">
+            <input id="createLoginname" type="text" name="createUserInf.loginname" lay-verify="loginname" placeholder="请输入创建人账号" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+</form>
+<!--结果显示表格-->
+<div style="width: 98%;margin: 0px auto;">
+    <table class="layui-table" id="result" lay-filter="userInfTable">
+        <!--操作按钮-->
+        <script type="text/html" id="editBtn">
+            <i lay-event="edit" class="layui-icon layui-icon-edit" style="font-size: 24px;border: 1px solid #ccc;margin-right: 10px;cursor: pointer;"></i>
+           <i lay-event="delete" class="layui-icon layui-icon-delete" style="font-size: 24px;border: 1px solid #ccc;cursor: pointer;"></i>
+        </script>
+        <!--编号自增-->
+        <script type="text/html" id="indexTpl">
+            {{d.LAY_TABLE_INDEX+1}}
+        </script>
+    </table>
+</div>
+<!--编辑时弹出的表单-->
+    <div class="layui-row" id="popUpdateTest" style="display:none;">
+        <div class="layui-col-md10">
+            <form class="layui-form layui-from-pane" action="" style="margin-top:20px" id="userInfEditForm" >
+                <div class="layui-form-item">
+                    <label class="layui-form-label">id:</label>
+                    <div class="layui-input-block" >  <!--style="line-height: 2.8;vertical-align:middle;color:#C1BFCA;"-->
+                        <input type="text" id="seeId"  value="" name="id"  class="layui-input"  readonly="readonly" style="color:#C1BFCA;">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">账号</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="editLN" value="" name="loginname"  required  lay-verify="required" autocomplete="off" placeholder="想把账号改成什么" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="editPW" value="" name="password"  required  lay-verify="required" autocomplete="off" placeholder="请输入想要改成" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">昵称</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="editNC" value="" name="nick"  required  lay-verify="required" autocomplete="off" placeholder="请输入想要改成的昵称" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-block">
+                        <select name="status" lay-filter="status">
+                            <option value="0">禁用</option>
+                            <option value="1" selected="">启用</option>
+                        </select>
+                    </div>
+                </div>
+                </div>
+                <div class="layui-form-item" style="margin-top:40px">
+                    <div class="layui-input-block">
+                        <button class="layui-btn  layui-btn-submit " lay-submit="" lay-filter="editFormSubmit">确认修改</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<script>
+    layui.use(['form','laydate','table'], function(){
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var table = layui.table;
+        //监听提交   //layui表单模块绑定提交事件（layui内置事件名）这么用
+        form.on('submit(formSubmit)', function(data){
+            //'result'是表格id属性值
+            table.reload('result', {      //重新加载，刷新
+                //$"#userInfSelectForm"选择器选择了“查询的表单”，把表单序数据列化form成JS对象？？？
+                where: $("#userInfSelectForm").serializeJson()
+                ,page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+            return false;
+        });
+        //表单验证(layui表单元素的校验只需在元素上加入lay-verify。这里在自定义值)
+        form.verify({
+            loginname: function(value, item){ //value：表单的值、item：表单的DOM对象
+                value=trim(value);
+                if(value.length>0){
+                    if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)){
+                        return '登录账号不能有特殊字符';
+                    }
+                }
+            },
+            nick: function(value, item){ //value：表单的值、item：表单的DOM对象
+                value=trim(value);
+                if(value.length>0){
+                    if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)){
+                        return '昵称不能有特殊字符';
+                    }
+                }
+            }
+        });
+        //日期控件
+        laydate.render({
+            elem: '#createdate' //指定元素
+            ,type: 'date'//可以选择年月日
+            ,format:'yyyy-MM-dd'//返回结果的格式
+            ,showBottom: true//不显示底部控制按钮
+        });
+        //表格控件。//表格渲染一哈（用layui提供的方法/它写好的方法）
+        table.render({
+            id:'result'
+            ,elem: '#result'
+            ,height: 'full-250'
+            ,url: '/userInf/getUserInf' //数据接口   //请求Handler里的方法
+            ,autoSort:false
+            ,page:true
+            ,limit:5
+            ,limits:[5,10,15]
+            ,cols: [[ //表头
+                {title: '序号',templet: '#indexTpl',width:50,unresize:true,align:'center'}
+                ,{field: 'loginname', title: '账号',unresize:true,align:'center'}
+                ,{field: 'nick', title: '昵称',unresize:true,align:'center'}
+                ,{field: 'createdate', title: '创建时间',unresize:true,align:'center',templet:function(d){      //把服务器返回的json取个名叫d
+                    return timeStamp2String(d.createdate,'ymd');
+                    }}
+                ,{field: 'createLoginname', title: '创建人',unresize:true,align:'center',templet:function(d){
+                            return d.createUserInf.loginname;     //input type="text"的name属性的属性值
+                }}
+                ,{field: 'status', title: '状态', unresize:true,align:'center',width:100,templet:function(d){
+                        if(d.status=='1'){
+                            return '启用';
+                        }else if(d.status=='0'){
+                            return '禁用';
+                        }
+                    }
+                }
+               ,{fixed: 'right',title:'操作', width:200,unresize:true, align:'center', toolbar: '#editBtn'}
+                ,{field: 'id', title: '编号',width:0,unresize:true,align:'center',hide:true}
+            ]]
+            ,parseData: function(res){ //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            }
+            ,request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                ,limitName: 'limit' //每页数据量的参数名，默认：limit
+            }
+            ,response: {
+                statusName: 'code' //规定数据状态的字段名称，默认：code
+                ,statusCode: 200 //规定成功的状态码，默认：0
+                ,msgName: 'msg' //规定状态信息的字段名称，默认：msg
+                ,countName: 'count' //规定数据总数的字段名称，默认：count
+                ,dataName: 'data' //规定数据列表的字段名称，默认：data
+        }
+    });
+        //监听工具条   layui提供的方法它的table绑定事件，然后当你（点击）选择事件值为'delete'，......，当为'edit'，......
+        table.on('tool(userInfTable)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            //console.log(layEvent);
+            if(layEvent === 'delete'){ //lay-event属性值是delete
+                layer.confirm('请确认删除该行并在数据库中删除该条数据', function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);      //通过索引关闭
+                    //向服务端发送删除指令
+                    $.ajax({
+                        type:"post",
+                        url:"/userInf/delete",
+                        data:data.id,
+                        dataType:"json",
+                        contentType:"application/json",
+                        success:function (responseResult) {
+                            if(responseResult.code==200){
+                                layer.msg(responseResult.msg, {icon: 1});
+                                //location.reload();  //重载一哈（刷新）
+                                setInterval("shuaXin()",1000);
+                                console.log("删除成功被执行到了");
+                                console.log(responseResult.msg);
+                            }else{
+                                layer.msg(responseResult.msg, {icon: 2});
+                            }
+                        }
+                    });
+                });
+            } else if(layEvent === 'edit'){ //编辑
+                //弹出一个框，显示表单
+                layer.open({
+                    //layer提供了5种层类型。可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
+                    type: 1,
+                    title: "锤子科技研发弹窗：修改用户",
+                    area: ['520px', '430px'],
+                    content: $("#popUpdateTest")    //引用的弹出层的页面层的方式加载修改界面表单
+            });
+                //向服务端发送查询这个用户的指令
+                $.ajax({
+                    type:"post",
+                    url:"/userInf/getUserInfById",
+                    data:data.id,
+                    dataType:"json",
+                    contentType:"application/json",
+                    success:function (rrr) {
+                        console.log("我的数据吐出来了么"+rrr.data[0].loginname+"-------"+"那是吐错了？"+rrr.msg);
+                        $("#seeId").attr("value",rrr.data[0].id);
+                        $("#editLN").attr("value",rrr.data[0].loginname);
+                        $("#editPW").attr("value",rrr.data[0].password);
+                        $("#editNC").attr("value",rrr.data[0].nick);
+                    }
+                });
+            }
+        });
+        //监听修改表单弹窗的提交（用layui给的方法）
+        form.on('submit(editFormSubmit)', function(data){
+            $.ajax({
+                type:"post",
+                url:"/userInf/edit",
+                data:$("#userInfEditForm").serialize(),
+                dataType:"json",
+                success:function (response) {
+                    if(response.code==200){
+                        layer.msg(response.msg, {icon: 6});
+                        setInterval("shuaXin()",1000);
+                        console.log("修改成功被执行到了");
+                        layui.form.render();
+                    }else{
+                        layer.msg(response.msg, {icon: 5});
+                    }
+                }
+            });
+            return false;
+        });
+    });
+    //  ↑渲染是到此结束嗷
+
+
+    //写个小刷新给ajax里写的setInterval()调用
+    function shuaXin() {
+        location.reload();
+        console.log("刷新被执行到了");
+    }
+    //给编辑的表单写个方法
+    //监听弹出框表单的提交，massage是修改界面的表单数据,submit(demo11),是修改按钮的绑定
+    /*function setFormValue(obj,data){
+        form.on('submit(demo11)', function(massage) {
+            $.ajax({
+                url:'/userInf/edit',
+                type:'POST',
+                data:{id:data.id,loginname:data.loginname,nick:data.nick,status:data.status},
+                success:function (res) {
+                    var returnCode = res.code;//取得返回数据（Sting类型的字符串）的信息进行取值判断
+                    if(returnCode==200){
+                        console.log("修改成功");
+                        /!*layer.closeAll('loading');
+                        layer.load(2);*!/
+                        layer.msg(res.msg, {icon: 6});
+                       /!* setTimeout(function(){
+                            obj.update({
+                                eqptType:massage.field.neweqptType,
+                                eqptIdCode:massage.field.neweqptIdCode,
+                                eqptName:massage.field.neweqptName
+                            });//修改成功修改表格数据不进行跳转
+                            layer.closeAll();//关闭所有的弹出层
+                        }, 1000);*!/
+                        setInterval("shuaXin()",1000);
+                      /!*  加载层-风格*!/
+                    }else{
+                        console.log("修改失败");
+                        layer.msg(res.msg, {icon: 5});
+                    }
+                }
+            })
+        })
+    }*/
+    //去除左右空格
+    function trim(s){
+        return s.replace(/(^\s*)|(\s*$)/g, "");
+    }
+    //日期格式化
+    function date2String(time,pattern) {
+        var year=time.getFullYear();
+        var month=time.getMonth()+1;
+        month = month < 10 ? ('0' + month) : month;
+        var date=time.getDate();
+        date = date < 10 ? ('0' + date) : date;
+        var hour=time.getHours();
+        hour = hour < 10 ? ('0' + hour) : hour;
+        var minute=time.getMinutes();
+        minute = minute < 10 ? ('0' + minute) : minute;
+        var second=time.getSeconds();
+        second = second < 10 ? ('0' + second) : second;
+        if('ymd'==pattern){//年月日
+            return year+"-"+month+"-"+date;
+        }else if('ymdhms'==pattern){//年月日时分秒
+            return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second;
+        }
+    }
+    //日期格式化
+    function timeStamp2String(timestamp,pattern) {
+        var time=new Date(parseInt(timestamp));
+        if(timestamp.length==10){
+            time=new Date(parseInt(timestamp)*1000);
+        }
+        var year=time.getFullYear();
+        var month=time.getMonth()+1;
+        month = month < 10 ? ('0' + month) : month;
+        var date=time.getDate();
+        date = date < 10 ? ('0' + date) : date;
+        var hour=time.getHours();
+        hour = hour < 10 ? ('0' + hour) : hour;
+        var minute=time.getMinutes();
+        minute = minute < 10 ? ('0' + minute) : minute;
+        var second=time.getSeconds();
+        second = second < 10 ? ('0' + second) : second;
+        if('ymd'==pattern){//年月日
+            return year+"-"+month+"-"+date;
+        }else if('ymdhms'==pattern){//年月日时分秒
+            return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second;
+        }
+    }
+    //表单序列化成对象  //这写法是立即执行函数的意思。jq入口函数那写法是只会执行一次    //表单根据input的name会变成String（键值对形式），这里是把String变成Json
+    (function(window, $) {
+        $.fn.serializeJson = function() {
+            var serializeObj = {};
+            var array = this.serializeArray();
+            var str = this.serialize();
+            $(array).each(
+                function() {
+                    if (serializeObj[this.name]) {
+                        if ($.isArray(serializeObj[this.name])) {
+                            serializeObj[this.name].push(this.value);
+                        } else {
+                            serializeObj[this.name] = [
+                                serializeObj[this.name], this.value ];
+                        }
+                    } else {
+                        serializeObj[this.name] = this.value;
+                    }
+                });
+            return serializeObj;
+        };
+    })(window, jQuery);
+</script>
+</body>
+</html>

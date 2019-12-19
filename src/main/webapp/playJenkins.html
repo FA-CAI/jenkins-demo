@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/layui.js"></script>
+
+    <!--  <script src="../../jquery-3.3.1.js"></script>-->
+    <script src="js/JQuery3.3.1.js"></script>
+  <!--  <script src="../../jquery-3.3.1.js"></script>-->
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        h3{
+            height: 35px;
+            line-height: 45px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;JenkinsDemo</h3>
+<hr style="margin-bottom: 30px;">
+
+<div  style="width: 300px;">
+    <div  id="happyJenkins"></div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        //$("#happyJenkins").html("腾飞2");
+
+
+        $.ajax({
+            type:"post",
+            //url:"/userInf/getName",
+            url:"userInf/getName",
+            //data:'loginname='+input,
+            dataType:"json",
+            success:function (response) {
+                if(response.code==200){
+                   $("#happyJenkins").html(response.msg);
+
+                }else if(response.code==500){
+                   alert("查询错误，服务器繁忙");
+
+                }
+            }
+        });
+
+    });
+
+</script>
+</body>
+</html>

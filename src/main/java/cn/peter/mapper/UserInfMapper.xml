@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.peter.mapper.UserInfMapper">
+    <sql id="allColumns">
+       JNAME,ID,PHONE
+    </sql>                <!-- sql片段-->
+
+    <resultMap id="userInfMap" type="userInf">
+        <id column="ID" property="id"></id>
+        <result column="ID" property="loginname"></result>
+    </resultMap>
+
+
+    <select id="getCountByLoginname" resultType="string">
+        select JNAME from jenkins_form_happy where id=#{loginname}
+    </select>
+
+
+
+
+
+
+
+</mapper>
