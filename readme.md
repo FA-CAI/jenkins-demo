@@ -1,0 +1,1 @@
+resources 还得自己mark成resources，这demo好蛋疼啊
